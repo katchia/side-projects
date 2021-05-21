@@ -15,7 +15,7 @@ library(ggthemes)
 
 
 ```{r}
-theme_538 <- function(..., base_size = 12) {
+theme_kat <- function(..., base_size = 12) {
   
     theme(
       # plotting components
@@ -60,7 +60,6 @@ Common words
 
 ```{r}
 #inner join?
-
 
 title_words_counts <- npr_episodes %>% 
   count(word, sort = TRUE)
@@ -118,7 +117,7 @@ morning_plot <- morning_edition %>%
   ylab("Count of appearances in episode titles") +
   coord_flip() +
   labs(title = "Morning Edition") +  
-  theme_538()
+  theme_kat()
 ```
 
 ```{r}
@@ -130,7 +129,7 @@ all_plot <- all_things %>%
   ylab("Count of appearances in episode titles") +
   coord_flip() + 
    labs(title = "All Things Considered") +  
-    theme_538()
+    theme_kat()
 ```
 
 ```{r}
@@ -142,7 +141,7 @@ weekend_sat_plot <- weekend_edition_sat %>%
   ylab("Count of appearances in episode titles") +
   coord_flip() +
   labs(title = "Weekend Edition: Saturday") +  
-  theme_538()
+  theme_kat()
 ```
 
 ```{r}
@@ -155,22 +154,16 @@ talk_plot <- talk_nation %>%
   ylab("Count of appearances in episode titles") +
   coord_flip() +
   labs(title = "Talk of the Nation")+
-  theme_538()
+  theme_kat()
 
  
-
 ```
 
 ```{r}
 figure <- ggarrange(talk_plot, all_plot, weekend_sat_plot, morning_plot, nrow = 2, ncol = 2, align = "v")
 
-ye <- annotate_figure(figure, top = text_grob("Most Common Words in NPR Episode Titles by Program", color = "black", face = "bold", size = 18)) +theme_538()
-
-
-```
-
-
-
-```{r}
+ye <- annotate_figure(figure, top = text_grob("Most Common Words in NPR Episode Titles by Program", color = "black", face = "bold", size = 18)) +theme_kat()
 
 ```
+
+
