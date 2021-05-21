@@ -6,4 +6,4 @@ Feel free to contact me on [Twitter](https://twitter.com/kat__chia) :jack_o_lant
 
 -----------
 ## My first project, [an analysis of npr episode titles](https://github.com/katchia/projects/tree/main/npr%20text%20analysis):
-![name-of-you-image](https://github.com/katchia/projects/blob/main/npr%20text%20analysis/nprplot2.png?raw=true)
+![npr text analysis](https://github.com/katchia/side-projects/blob/main/npr_text_analysis/nprplot2.png?raw=true)
