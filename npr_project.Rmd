@@ -1,0 +1,176 @@
+---
+title: "Untitled"
+author: "kat"
+date: "5/21/2021"
+output: html_document
+---
+
+```{r}
+library(tidyverse)
+library(tidytext)
+library(ggpubr)
+npr <- read.csv("C:/Users/kc13c/OneDrive - Florida State University/programming/episodes.csv")
+library(ggthemes)
+```
+
+
+```{r}
+theme_538 <- function(..., base_size = 12) {
+  
+    theme(
+      # plotting components
+      
+      ## drop minor gridlines
+      panel.grid.minor = element_blank(),
+      # change grid lines to gray
+      panel.grid.major =  element_line(color = "#d0d0d0"),
+      # fill the plot and panel spaces with grey and remove border
+      panel.background = element_rect(fill = "Gray", color = NA),
+      plot.background = element_rect(fill = "Gray", color = NA),
+      panel.border = element_blank(),
+      # remove strip background
+      strip.background = element_blank(),
+      # adjust the margins of plots and remove axis ticks
+      plot.margin = margin(0.5, 1, 0.5, 1, unit = "cm"),
+      axis.ticks = element_blank(),
+      # change text family, size, and adjust position of titles
+      text = element_text(size = 10),
+      axis.text = element_text(face = "bold", color = "White", size = 8),
+      axis.title = element_text(face = "bold", size = 10),
+      axis.title.x = element_text(margin = margin(0.5, 0, 0, 0, unit = "cm")),
+      axis.title.y = element_text(margin = margin(0, 0.5, 0, 0, unit = "cm"), angle =90),
+      plot.title = element_text(face = "bold", size = 12, hjust = 0),
+      plot.title.position = "plot",
+      plot.subtitle = element_text(size = 16, margin = margin(0.2, 0, 1, 0, unit = "cm"), hjust = 0),
+      plot.caption = element_text(size = 10, margin = margin(1, 0, 0, 0, unit = "cm"), hjust = 1),
+      strip.text = element_text(size = 10, face = "bold"),
+      ...
+    )
+}
+```
+
+```{r}
+npr_episodes <-npr %>%
+  unnest_tokens(word, title)
+
+view(npr_episodes)
+```
+
+Common words
+
+```{r}
+#inner join?
+
+
+title_words_counts <- npr_episodes %>% 
+  count(word, sort = TRUE)
+
+title_words <- merge(title_words_counts, npr_episodes, by = "word", all = TRUE)
+
+
+#let's omit stop words first and create objects for each show
+
+morning_edition <-title_words %>%
+  filter(program == "Morning Edition") %>%
+  anti_join(stop_words, c(word = "word")) %>%
+  count(word, sort = TRUE)
+
+all_things <-title_words %>%
+  filter(program == "All Things Considered") %>%
+  anti_join(stop_words, c(word = "word")) %>%
+  count(word, sort = TRUE)
+
+weekend_edition_sat <-title_words %>%
+  filter(program == "Weekend Edition Saturday") %>%
+  anti_join(stop_words, c(word = "word")) %>%
+  count(word, sort = TRUE)
+
+talk_nation <-title_words %>%
+  filter(program == "Talk of the Nation") %>%
+  anti_join(stop_words, c(word = "word")) %>%
+  count(word, sort = TRUE)
+
+news_notes <-title_words %>%
+  filter(program == "News & Notes") %>%
+  anti_join(stop_words, c(word = "word")) %>%
+  count(word, sort = TRUE)
+
+day_day <-title_words %>%
+  filter(program == "Day_to_Day") %>%
+  anti_join(stop_words, c(word = "word")) %>%
+  count(word, sort = TRUE)
+
+weekend_edition_sun <-title_words %>%
+  filter(program == "Weekend Edition Sunday") %>%
+  anti_join(stop_words, c(word = "word")) %>%
+  count(word, sort = TRUE)
+```
+
+
+```{r}
+#now let's plot!
+
+morning_plot <- morning_edition %>%
+  head(20) %>%
+  mutate(word=reorder(word, n)) %>%
+  ggplot(aes(word, n)) +
+  geom_bar(stat = "identity", fill = "#FFFFFF", color = "black") +
+  ylab("Count of appearances in episode titles") +
+  coord_flip() +
+  labs(title = "Morning Edition") +  
+  theme_538()
+```
+
+```{r}
+all_plot <- all_things %>%
+  head(20) %>%
+  mutate(word=reorder(word, n)) %>%
+  ggplot(aes(word, n)) +
+  geom_bar(stat = "identity", fill = "#4C85C5", color = "black") +
+  ylab("Count of appearances in episode titles") +
+  coord_flip() + 
+   labs(title = "All Things Considered") +  
+    theme_538()
+```
+
+```{r}
+weekend_sat_plot <- weekend_edition_sat %>%
+  head(20) %>%
+  mutate(word=reorder(word, n)) %>%
+  ggplot(aes(word, n)) +
+  geom_bar(stat = "identity", fill ="#00000F") +
+  ylab("Count of appearances in episode titles") +
+  coord_flip() +
+  labs(title = "Weekend Edition: Saturday") +  
+  theme_538()
+```
+
+```{r}
+
+talk_plot <- talk_nation %>%
+  head(20) %>%
+  mutate(word=reorder(word, n)) %>%
+  ggplot(aes(word, n)) +
+  geom_bar(stat = "identity", fill= "#F15B1C", color = "black") +
+  ylab("Count of appearances in episode titles") +
+  coord_flip() +
+  labs(title = "Talk of the Nation")+
+  theme_538()
+
+ 
+
+```
+
+```{r}
+figure <- ggarrange(talk_plot, all_plot, weekend_sat_plot, morning_plot, nrow = 2, ncol = 2, align = "v")
+
+ye <- annotate_figure(figure, top = text_grob("Most Common Words in NPR Episode Titles by Program", color = "black", face = "bold", size = 18)) +theme_538()
+
+
+```
+
+
+
+```{r}
+
+```
