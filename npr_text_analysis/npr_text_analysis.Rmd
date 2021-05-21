@@ -1,16 +1,18 @@
 ---
-title: "Untitled"
+title: "npr_episodes"
 author: "kat"
 date: "5/21/2021"
 output: html_document
+---
 ---
 
 ```{r}
 library(tidyverse)
 library(tidytext)
 library(ggpubr)
-npr <- read.csv("C:/Users/kc13c/OneDrive - Florida State University/programming/episodes.csv")
 library(ggthemes)
+
+npr <-read.csv("episodes.csv")
 ```
 
 
@@ -69,37 +71,37 @@ title_words <- merge(title_words_counts, npr_episodes, by = "word", all = TRUE)
 
 #let's omit stop words first and create objects for each show
 
-morning_edition <-title_words %>%
+morning_edition <- title_words %>%
   filter(program == "Morning Edition") %>%
   anti_join(stop_words, c(word = "word")) %>%
   count(word, sort = TRUE)
 
-all_things <-title_words %>%
+all_things <- title_words %>%
   filter(program == "All Things Considered") %>%
   anti_join(stop_words, c(word = "word")) %>%
   count(word, sort = TRUE)
 
-weekend_edition_sat <-title_words %>%
+weekend_edition_sat <- title_words %>%
   filter(program == "Weekend Edition Saturday") %>%
   anti_join(stop_words, c(word = "word")) %>%
   count(word, sort = TRUE)
 
-talk_nation <-title_words %>%
+talk_nation <- title_words %>%
   filter(program == "Talk of the Nation") %>%
   anti_join(stop_words, c(word = "word")) %>%
   count(word, sort = TRUE)
 
-news_notes <-title_words %>%
+news_notes <- title_words %>%
   filter(program == "News & Notes") %>%
   anti_join(stop_words, c(word = "word")) %>%
   count(word, sort = TRUE)
 
-day_day <-title_words %>%
+day_day <- title_words %>%
   filter(program == "Day_to_Day") %>%
   anti_join(stop_words, c(word = "word")) %>%
   count(word, sort = TRUE)
 
-weekend_edition_sun <-title_words %>%
+weekend_edition_sun <- title_words %>%
   filter(program == "Weekend Edition Sunday") %>%
   anti_join(stop_words, c(word = "word")) %>%
   count(word, sort = TRUE)
@@ -162,8 +164,9 @@ talk_plot <- talk_nation %>%
 ```{r}
 figure <- ggarrange(talk_plot, all_plot, weekend_sat_plot, morning_plot, nrow = 2, ncol = 2, align = "v")
 
-ye <- annotate_figure(figure, top = text_grob("Most Common Words in NPR Episode Titles by Program", color = "black", face = "bold", size = 18)) +theme_kat()
+ye <- annotate_figure(figure, top = text_grob("Most Common Words in NPR Episode Titles by Program", color = "black", face = "bold", size = 18)) + theme_kat()
 
 ```
+
 
 
