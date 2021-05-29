@@ -11,6 +11,9 @@ library(tidytuesdayR)
 library(ggdark)
 library(ggpubr)
 library(patchwork)
+library(extrafont)
+loadfonts(device = "win", quiet = TRUE)
+
 
 
 records <- readr::read_csv('https://raw.githubusercontent.com/rfordatascience/tidytuesday/master/data/2021/2021-05-25/records.csv')
@@ -26,7 +29,7 @@ unique(records[c("type")])
 ```
 
 
-There are a lot of tracks. Let's just focus on the top one from each type () to keep this succinct!
+There are a lot of tracks. Let's see the top from each
 
 ```{r}
 #what is the quickest-to-complete three lap track?
@@ -92,7 +95,6 @@ Let's see how long everyone is taking to complete these tracks
 
 overall_means <- ggplot(means, aes(x = reorder(track,-mean_times, sum), y = mean_times, fill = track)) +
   geom_col(aes(stat = "identity"), show.legend = FALSE) +
-  scale_fill_viridis(option = "C", discrete = TRUE) +
   coord_flip() +
   facet_wrap(~type)+
   dark_theme_classic()+
@@ -101,8 +103,8 @@ overall_means <- ggplot(means, aes(x = reorder(track,-mean_times, sum), y = mean
   )
 
 
-overall_means_plot <- overall_means + labs(x = "Mean Times",
-                                    y = "Track",
+overall_means_plot <- overall_means + labs(x = "Track",
+                                    y = "Mean Times(seconds)",
                                     fill = "Track"
                                     )
 
@@ -114,10 +116,6 @@ overall_means_plot_2
 
 ```{r}
 
-means <- records %>%
-  group_by(track,type) %>%
-  summarise(mean_times = mean(time))
-  
 dot <- ggdotchart(means, x = "track", 
                 y = "mean_times", 
                 color = "type", 
@@ -128,8 +126,8 @@ dot <- ggdotchart(means, x = "track",
  dark_theme_classic()
 
  
-overall_dot <- dot + labs(x = "Mean Times",
-                          y = "Track",
+overall_dot <- dot + labs(x = "Track",
+                          y = "Mean Times(seconds)",
                           fill = "Type")
 
 overall_dot
