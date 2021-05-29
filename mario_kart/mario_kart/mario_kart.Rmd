@@ -1,0 +1,156 @@
+---
+title: "yeethaw"
+author: "kat"
+date: "5/25/2021"
+output: html_document
+---
+
+```{r}
+library(tidyverse)
+library(tidytuesdayR)
+library(ggdark)
+library(ggpubr)
+library(patchwork)
+
+
+records <- readr::read_csv('https://raw.githubusercontent.com/rfordatascience/tidytuesday/master/data/2021/2021-05-25/records.csv')
+drivers <- readr::read_csv('https://raw.githubusercontent.com/rfordatascience/tidytuesday/master/data/2021/2021-05-25/drivers.csv')
+
+```
+
+Since I just read this data in, I'd like a feel for it. So let's get the feelers out!
+
+How many types of tracks are there?
+```{r}
+unique(records[c("type")])
+```
+
+
+There are a lot of tracks. Let's just focus on the top one from each type () to keep this succinct!
+
+```{r}
+#what is the quickest-to-complete three lap track?
+records %>%
+  arrange(time) %>%
+  filter(type == 'Three Lap') %>%
+  slice_min(time, n = 1)
+
+```
+
+
+```{r}
+#what is the quickest-to-complete one lap track?
+records %>%
+  arrange(time) %>%
+  filter(type == 'Single Lap') %>%
+  slice_min(time, n = 1)
+```
+
+```{r}
+#what if we account for shortcuts?
+records %>%
+  arrange(time) %>%
+  filter(type == 'Single Lap') %>%
+  filter(shortcut == 'No') %>%
+  slice_min(time, n = 1)
+
+```
+
+
+```{r}
+#what if we account for shortcuts?
+records %>%
+  arrange(time) %>%
+  filter(type == 'Three Lap') %>%
+  filter(shortcut == "No") %>%
+  slice_min(time, n = 1)
+```
+
+Okay. What are the average times for these tracks? Note: we are not accounting for shortcuts here!
+
+```{r}
+single_lap <- records %>%
+  select(track, type, time) %>%
+  group_by(track,type) %>%
+  filter(type == 'Single Lap') %>%
+  summarise(mean_times = mean(time))
+
+three_lap <- records %>%
+  select(track, type, time) %>%
+  group_by(track,type) %>%
+  filter(type == 'Three Lap') %>%
+  summarise(mean_times = mean(time))
+
+means <- records %>%
+  select(track, type, time) %>%
+  group_by(track,type) %>%
+  summarise(mean_times = mean(time))
+```
+
+Let's see how long everyone is taking to complete these tracks
+```{r}
+
+overall_means <- ggplot(means, aes(x = reorder(track,-mean_times, sum), y = mean_times, fill = track)) +
+  geom_col(aes(stat = "identity"), show.legend = FALSE) +
+  scale_fill_viridis(option = "C", discrete = TRUE) +
+  coord_flip() +
+  facet_wrap(~type)+
+  dark_theme_classic()+
+  theme(
+    legend.text = element_text(size = 8)
+  )
+
+
+overall_means_plot <- overall_means + labs(x = "Mean Times",
+                                    y = "Track",
+                                    fill = "Track"
+                                    )
+
+overall_means_plot_2 <- overall_means_plot + guides(color = guide_legend(override.aes = list(size=3)))
+
+overall_means_plot_2
+
+```
+
+```{r}
+
+means <- records %>%
+  group_by(track,type) %>%
+  summarise(mean_times = mean(time))
+  
+dot <- ggdotchart(means, x = "track", 
+                y = "mean_times", 
+                color = "type", 
+                sorting = "descending", 
+                rotate  = TRUE, 
+                dot.size = 3, 
+                y.text.col = TRUE) +
+ dark_theme_classic()
+
+ 
+overall_dot <- dot + labs(x = "Mean Times",
+                          y = "Track",
+                          fill = "Type")
+
+overall_dot
+```
+
+```{r}
+#peachwork...er patchwork
+
+peach <- (overall_means_plot_2/overall_dot) +
+  plot_annotation(
+    title = "Mario Kart Speed Runs",
+    subtitle = "A graphical representation to make you realize you are actually awful at Mario Kart",
+    caption = "Tidy Tuesday | Week 22 | @kat_chia",
+    tag_levels = "A",
+     theme = dark_theme_classic() +
+    theme(plot.title = element_text(family = "Bauhaus 93", size = 20),
+          plot.subtitle = element_text(family = "Tahoma"))
+  )
+peach
+```
+
+  
+```
+
