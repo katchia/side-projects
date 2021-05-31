@@ -1,0 +1,95 @@
+---
+title: "doge"
+author: "kat"
+date: "5/31/2021"
+output: html_document
+---
+
+```{r}
+library(tidyverse)
+library(ggthemes)
+library(plyr)
+library(lubridate)
+library(shape)
+library(ggridges)
+library(grid)
+library(ggpubr)
+library(ggdark)
+library(cowplot)
+library(extrafont)
+library(RColorBrewer)
+
+
+#read in the file I snagged from Kaggle
+doge <- read_csv("DOGE-USD.csv")
+
+#everything up until this year is uneventful, so let's just do this year
+doge_clean <- doge %>%
+  filter(Date >= "2021-01-01")
+```
+
+
+```{r}
+
+# I think I'll just make two plots displaying the same trend in different ways
+
+#we'll start with a line graph
+
+doge_plot <- ggplot(doge_clean, aes(Date, Low)) + 
+  geom_line(color = "red", size = 1) +
+  annotate("text", x = as.Date("2021-04-08"), y = 0.42, 
+           label = "Elon Musk appeared on SNL", color = "gray15", family = "Bebas Neue") +
+    annotate("curve", x = as.Date("2021-04-15"), y = .4, 
+             xend = as.Date("2021-05-09"), yend = .43, curvature = 0.5, color = "black") +
+   annotate("text", x = as.Date("2021-03-20"), y = 0.16, 
+           label = "Doge Day flop fallout", color = "gray15", family = "Bebas Neue") +
+    annotate("curve", x = as.Date("2021-04-01"), y = .14, 
+             xend = as.Date("2021-04-23"), yend = .17, curvature = 0.2, color = "black") +
+  labs(caption = "Source: Kaggle | @kat_chia") +
+ theme_economist() +
+  theme(
+  text = element_text(family = "Bebas Neue", size = 12),
+  plot.title = element_text(hjust = 0.5),
+  plot.subtitle = element_text(hjust = 0.5)
+  )
+```
+
+
+```{r}
+#i really want a density ridge...but we need to assign months first
+
+doge_months <- doge_clean %>%
+  mutate(Date=as.Date(Date, format = "%d-%m-%Y"))
+
+doge_months <- doge2020 %>%
+  mutate(Month = months(doge2020$Date, abbreviate = TRUE))
+  
+#realized that I need to reorganize my labels
+#this can be accomplished by creating a vector, 
+#then feeding that vector into the ggpplot
+
+doge_months$Month <- factor(doge_months$Month,levels = c("May", "Apr", "Mar", "Feb","Jan"))
+
+doge_density <- ggplot(doge_months, aes(Low, Month, fill = Month)) +
+  geom_density_ridges(scale = 1.8) + #made this high
+ theme_economist() +
+  scale_fill_brewer(palette = "Reds")+
+  theme(
+    text = element_text(family = "Bebas Neue", size = 12),
+    legend.position = "none"
+  )
+```
+
+
+```{r}
+#finishing touches
+
+
+#combine plots
+combined <- plot_grid(doge_density,doge_plot,
+                      ncol = 1)
+
+rise_and_fall <- annotate_figure(combined, top = text_grob("Dogecoin, Memecoin", color = "gray38", face = "bold", size = 18, family = "Magazine")) + 
+  theme_economist()
+```
+
