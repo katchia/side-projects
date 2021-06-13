@@ -13,3 +13,6 @@ Feel free to contact me on [Twitter](https://twitter.com/kat__chia) :jack_o_lant
 
 ## A look at Dogecoin, [the most hilariously volatile stock](https://github.com/katchia/side-projects/tree/main/doge):
 ![rise and fall](https://github.com/katchia/side-projects/blob/main/doge/rise_fall.png?raw=true)
+
+## Tidy Tuesday (Week 24), [Great Lakes Fish](https://github.com/katchia/side-projects/tree/main/fish):
+![fish data](https://github.com/katchia/side-projects/blob/main/fish/fishplot.png?raw=true)
