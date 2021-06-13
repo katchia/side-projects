@@ -1,0 +1,70 @@
+---
+title: "fish"
+author: "kat"
+date: "6/13/2021"
+output: html_document
+---
+
+```{r}
+library(tidytuesdayR)
+library(tidyverse)
+library(ggdist)
+library(gghalves)
+library(hrbrthemes)
+library(ggsci)
+library(extrafont)
+
+tuesdata <- tidytuesdayR::tt_load('2021-06-08')
+
+fishing <- tuesdata$fishing
+
+
+```
+
+```{r}
+#lets see what the most caught fish is
+fishing %>%
+  count(species) %>%
+  arrange(desc(n)) %>%
+  group_by(species) %>%
+  head(n = 3)
+
+```
+
+
+
+Ok, looks like it's Lake Whitefish, the Walleye, and the Northern Pike. Now we will subset so we only have those three for our plot.
+
+```{r}
+top_fish <- fishing %>% 
+  filter(year > 2011) %>%
+  filter(species == 'Lake Whitefish'| species == 'Walleye'| species == 'Northern Pike')
+
+```
+
+```{r}
+fish_plot <- ggplot(top_fish, aes(x = reorder(species, -values, na.rm = TRUE), y = values, color = species, fill = species, alpha = 0.9)) + 
+  geom_boxplot(width = 0.5) +
+  geom_jitter(alpha = 0.6, width = 0.15) +
+  scale_y_log10() +
+  coord_flip() +
+  labs(title = "Top 3 Most Caught in the Commercial Fishing Industry",
+       caption = "Tidy Tuesday | Week 24 | @kat_chia",
+       subtitle = "Total fish caught over the past ten years (in thousands)"
+      )
+
+
+final_fish <- fish_plot + theme_ipsum() + scale_color_jama() + scale_fill_jama() + 
+  theme(plot.background = element_rect(fill = 'beige'),
+        plot.title = element_text(size = 18, family = "Bebas Neue"),
+        plot.subtitle = element_text(color = "gray27", family = "Bebas Neue"),
+    legend.position = "none",
+    axis.title.y = element_blank(),
+    axis.title.x = element_blank()
+    )
+  
+
+```
+
+
+
