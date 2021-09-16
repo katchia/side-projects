@@ -173,11 +173,11 @@ p <- ggplot(top_all_time, aes(x=reorder(song,n), n, fill = decade, color = decad
 
 
 final <- p + 
-  annotate("text",  x = 11, y = 25, family = "Source Sans Pro", label = "Billboard\n100's\nTop 10\n#1 Songs\nby Decade", hjust = 1, vjust = 0, colour = "black", size = 18, lineheight = 1) +
+  annotate("text",  x = 12, y = 25, family = "Source Sans Pro", label = "Billboard\n100's\nTop 10\n#1 Songs\nby Decade", hjust = 1, vjust = 0, colour = "black", size = 18, lineheight = 1) +
   annotate("text",  x = 5, y = 25, family = "Lucida Sans", label = "The top 10 songs that\n stayed at Number 1\n from the 1970s-2010s", hjust = 1, vjust = 0, colour = "#09283C", size = 6, lineheight = 1) +
   labs(caption = "Tidy Tuesday | Week 38 | @kat__chia") +
-  scale_color_manual(values = futurevisions("atomic_clock"), labels = c("70s", "80s", "90s", "2000s", "2010s")) +
-  scale_fill_manual(values = futurevisions("atomic_clock"), labels = c("70s", "80s", "90s", "2000s", "2010s")) +
+  scale_color_manual(values = futurevisions("atomic_clock"), breaks = c("70s", "80s", "90s", "2000s", "2010s")) +
+  scale_fill_manual(values = futurevisions("atomic_clock"), breaks = c("70s", "80s", "90s", "2000s", "2010s")) +
    theme(
     axis.title.x=element_blank(),
     axis.title.y=element_blank(),
@@ -195,6 +195,8 @@ final <- p +
    ) +
   guides(color = guide_legend(label.position = "bottom")) 
 
-print(final)
+final
+
+ggsave("top1.jpeg", plot=final, width = 10, height = 8)
 ```
 
