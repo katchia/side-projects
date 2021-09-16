@@ -174,7 +174,7 @@ p <- ggplot(top_all_time, aes(x=reorder(song,n), n, fill = decade, color = decad
 
 final <- p + 
   annotate("text",  x = 12, y = 25, family = "Source Sans Pro", label = "Billboard\n100's\nTop 10\n#1 Songs\nby Decade", hjust = 1, vjust = 0, colour = "black", size = 18, lineheight = 1) +
-  annotate("text",  x = 5, y = 25, family = "Lucida Sans", label = "The top 10 songs that\n stayed at Number 1\n from the 1970s-2010s", hjust = 1, vjust = 0, colour = "#09283C", size = 6, lineheight = 1) +
+  annotate("text",  x = 5, y = 25, family = "Lucida Sans", label = "The Billboard 100 is the music industry standard record chart in the US. Rankings are posted weekly and are based on sales (physical and digital), radio play, and online streaming. Top 10 songs that\n stayed at Number 1\n from the 1970s-2010s are shown here.", hjust = 1, vjust = 0, colour = "#09283C", size = 6, lineheight = 1) +
   labs(caption = "Tidy Tuesday | Week 38 | @kat__chia") +
   scale_color_manual(values = futurevisions("atomic_clock"), breaks = c("70s", "80s", "90s", "2000s", "2010s")) +
   scale_fill_manual(values = futurevisions("atomic_clock"), breaks = c("70s", "80s", "90s", "2000s", "2010s")) +
