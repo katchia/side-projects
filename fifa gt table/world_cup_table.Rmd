@@ -10,7 +10,17 @@ library(tidyverse)
 library(gtExtras)
 library(gt)
 library(janitor)
+library(readxl)
+```
+flags
 
+```{r}
+country_flags <- read_excel("country_flags.xlsx")
+
+country_flags %>%
+  select(team, flag) %>%
+  gt(groupname_col = "team_test") %>%
+  gt_img_rows(columns = flag, height = 20)
 ```
 
 ```{r}
@@ -57,25 +67,28 @@ finals_1 <- finals %>%
 
 ```{r}
 final_df <- finals_1 %>%
-  arrange(desc(Wins)) 
+  arrange(desc(Wins))
+
+final_df <- final_df %>%
+  left_join(country_flags, by = c("team")) %>%
+  select(team, flag, Wins:outcome)
 ```
+
 
 
 ```{r}
-fifa <-final_df %>%
+fifa <- final_df %>%
   gt() %>%
   gt_plt_winloss(outcome, max_wins = 8) %>%
-  tab_options(data_row.padding = px(2)) %>%
-  gt_theme_538(table.width = px(250) %>%
+  gt_img_rows(columns = flag) %>%
+  gt_theme_538() %>%
   tab_header(title = "FIFA World Cup Finals",
              subtitle = md("Winners and Losers of the FIFA World Cup")) %>%
-  tab_footnote(
-    footnote = "Gray bars indicate teams that tied and had to go to OT",
-    locations = cells_column_labels(
-      columns = 4
-    )
-  ) %>%
   tab_source_note(md("**Table:** @kat__chia"))
 ```
 
+```{r}
+fifa %>%
+  gtsave("fifa_table.png", path = tempdir())
+```
 
