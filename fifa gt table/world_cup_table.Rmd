@@ -1,0 +1,81 @@
+---
+title: "Untitled"
+author: "kat"
+date: "10/4/2021"
+output: html_document
+---
+
+```{r}
+library(tidyverse)
+library(gtExtras)
+library(gt)
+library(janitor)
+
+```
+
+```{r}
+world_cup <- read.csv('world_cup.csv')
+
+#mutate results
+
+world_cup <- world_cup %>%
+  mutate(result = Home.Team.Goals - Away.Team.Goals)
+
+#clean
+
+world_cup <- world_cup %>% #let the snake make it's case
+  janitor::clean_names() 
+  
+world_cup <- world_cup %>%
+  rename(home_goals = home_team_goals, away_goals = away_team_goals)
+
+finals <- world_cup %>%
+  filter(stage == "Final")%>%
+  select(stage, stadium, city, team_home = home_team_name, team_away = away_team_name, result, home_goals, away_goals) %>%
+  pivot_longer(contains('team'), names_to = 'home_away', values_to = 'team', names_prefix = 'team_') %>%
+  mutate(result = ifelse(home_away == 'home', result, -result),
+         win = ifelse(result == 0, 0.5, ifelse(result > 0, 1, 0))
+         ) %>%
+  select(team, win, home_goals, away_goals)
+
+finals <- finals %>% slice(-c(39:40))
+
+```
+
+
+
+```{r}
+finals_1 <- finals %>%
+  group_by(team) %>%
+  summarise(
+    Wins = length(win[win ==1]),
+    Losses = length(win[win==0]),
+    outcome = list(win), .groups = "drop") %>%
+  select(team, Wins:outcome)
+  
+```
+
+```{r}
+final_df <- finals_1 %>%
+  arrange(desc(Wins)) 
+```
+
+
+```{r}
+fifa <-final_df %>%
+  gt() %>%
+  gt_plt_winloss(outcome, max_wins = 8) %>%
+  tab_options(data_row.padding = px(2)) %>%
+  gt_theme_538(table.width = px(250) %>%
+  tab_header(title = "FIFA World Cup Finals",
+             subtitle = md("Winners and Losers of the FIFA World Cup")) %>%
+  tab_footnote(
+    footnote = "Gray bars indicate teams that tied and had to go to OT",
+    locations = cells_column_labels(
+      columns = 4
+    )
+  ) %>%
+  tab_source_note(md("**Table:** @kat__chia"))
+```
+
+
