@@ -15,7 +15,7 @@ Feel free to contact me on [Twitter](https://twitter.com/kat__chia) :jack_o_lant
 ![rise and fall](https://github.com/katchia/side-projects/blob/main/doge/rise_fall.png?raw=true)
 
 ## Tidy Tuesday (Week 24), also the first time I gave myself a 1 hour time limit! [Great Lakes Fish](https://github.com/katchia/side-projects/tree/main/fish):
-![fish data](https://github.com/katchia/side-projects/blob/main/fish/fishplot.png?raw=true)
+![fish data](https://github.com/katchia/side-projects/blob/main/fish/fishplot.jpeg)
 
 ## Tidy Tuesday (Week 38), I'm back! 14 weeks later. [Top 1s from the Billboard 100](https://github.com/katchia/side-projects/tree/main/billboard100):
 ![top_1s](https://github.com/katchia/side-projects/blob/main/billboard100/top1.jpeg?raw=true)
